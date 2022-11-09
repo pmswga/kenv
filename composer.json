@@ -2,7 +2,7 @@
     "name": "pmswg/kenv",
     "description": "Env parser for KPHP",
     "type": "library",
-    "license": "GPL-3.0 license",
+    "license": "GPL-3.0-only",
     "autoload": {
         "psr-4": {
             "Pmswg\\Kenv\\": "src/"
