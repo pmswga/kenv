@@ -6,8 +6,8 @@ class Env
 {
 
     /**
-     * @param string $env_string
-     * @throws EnvParseException
+     * @param string|false $env_string
+     * @throws \RuntimeException
      * @return array
      */
     public static function parse_env_string(string $env_string) : array
@@ -34,15 +34,15 @@ class Env
             $env_var = explode("=", $line, 2);
 
             if (count($env_var) !== 2) {
-                throw new EnvParseException('Error env file format');
+                throw new \RuntimeException('Error env file format');
             }
 
             if (!EnvParseHelper::isEnvVar($env_var[0])) {
-                throw new EnvParseException('Invalid format of env option ' . $env_var[0] . "=" . $env_var[1]);
+                throw new \RuntimeException('Invalid format of env option ' . $env_var[0] . "=" . $env_var[1]);
             }
 
             if (!EnvParseHelper::isEnvVal($env_var[1])) {
-                throw new EnvParseException('Invalid format of env option' . $env_var[0] . "=" . $env_var[1]);
+                throw new \RuntimeException('Invalid format of env option' . $env_var[0] . "=" . $env_var[1]);
             }
 
             $env[$env_var[0]] = EnvParseHelper::clearString($env_var[1]);
@@ -52,14 +52,14 @@ class Env
     }
 
     /**
-     * @param string $filename
-     * @throws EnvParseException
+     * @param string|false $filename
+     * @throws \RuntimeException
      * @return array
      */
     public static function parse_env_file(string $filename) : array
     {
         if (!is_file($filename) && !file_exists($filename)) {
-            throw new EnvParseException("File doesn't exist");
+            throw new \RuntimeException("File doesn't exist");
         }
 
         $content = file_get_contents($filename);
@@ -94,11 +94,11 @@ class Env
             }
 
             if (!EnvParseHelper::isEnvVar($env_var[0])) {
-                throw new EnvParseException('Invalid format of env option ' . $env_var[0] . "=" . $env_var[1]);
+                throw new \RuntimeException('Invalid format of env option ' . $env_var[0] . "=" . $env_var[1]);
             }
 
             if (!EnvParseHelper::isEnvVal($env_var[1])) {
-                throw new EnvParseException('Invalid format of env option' . $env_var[0] . "=" . $env_var[1]);
+                throw new \RuntimeException('Invalid format of env option' . $env_var[0] . "=" . $env_var[1]);
             }
 
             $env[$env_var[0]] = EnvParseHelper::clearString($env_var[1]);
