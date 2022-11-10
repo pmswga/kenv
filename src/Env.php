@@ -1,92 +1,110 @@
 <?php
-	declare(strict_types=1);
-	namespace pmswga\kenv;
+
+namespace pmswga\kenv;
 	
-	class Env
-	{
-		
-		static public function parse_env_string(string $env_string) : array
-		{
-			$content_lines = explode("\n", $env_string);
+class Env
+{
 
-			if (empty($content_lines)) {
-				return [];
-			}
+    /**
+     * @param string $env_string
+     * @throws EnvParseException
+     * @return array
+     */
+    public static function parse_env_string(string $env_string) : array
+    {
+        $content_lines = explode("\n", $env_string);
 
-			$lines = [];
+        if (empty($content_lines)) {
+            return [];
+        }
 
-			foreach ($content_lines as $content_line) {
-				$line = clear_string($content_line);
+        $lines = [];
 
-				if (!empty($line)) {
-					$lines []= $line;
-				}
-			}
+        foreach ($content_lines as $content_line) {
+            $line = EnvParseHelper::clearString($content_line);
 
-			$env = [];
+            if (!empty($line)) {
+                $lines []= $line;
+            }
+        }
 
-			foreach ($lines as $line) {
-				if (!validate_env_entry($line)) {
-					throw new \RuntimeException('Error env file format');
-				}
+        $env = [];
 
-				$env_var = explode("=", $line, 2);
+        foreach ($lines as $line) {
+            $env_var = explode("=", $line, 2);
 
-				if (count($env_var) !== 2) {
-					throw new \RuntimeException('Error env file format');
-				}
+            if (count($env_var) !== 2) {
+                throw new EnvParseException('Error env file format');
+            }
 
-				$env[$env_var[0]] = clear_string($env_var[1]);
-			}
+            if (!EnvParseHelper::isEnvVar($env_var[0])) {
+                throw new EnvParseException('Invalid format of env option ' . $env_var[0] . "=" . $env_var[1]);
+            }
 
-			return $env;
-		}
-		
-		static public function parse_env_file(string $filename) : array
-		{			
-			if (!is_file($filename) && !file_exists($filename)) {
-				throw new \RuntimeException('File is not exists');
-			}
+            if (!EnvParseHelper::isEnvVal($env_var[1])) {
+                throw new EnvParseException('Invalid format of env option' . $env_var[0] . "=" . $env_var[1]);
+            }
 
-			$content = file_get_contents($filename);
+            $env[$env_var[0]] = EnvParseHelper::clearString($env_var[1]);
+        }
 
-			if (empty($content)) {
-				return [];
-			}
+        return $env;
+    }
 
-			$content_lines = explode("\n", $content);
+    /**
+     * @param string $filename
+     * @throws EnvParseException
+     * @return array
+     */
+    public static function parse_env_file(string $filename) : array
+    {
+        if (!is_file($filename) && !file_exists($filename)) {
+            throw new EnvParseException("File doesn't exist");
+        }
 
-			if (empty($content_lines)) {
-				return [];
-			}
+        $content = file_get_contents($filename);
 
-			$lines = [];
+        if (empty($content)) {
+            return [];
+        }
 
-			foreach ($content_lines as $content_line) {
-				$line = EnvParseHelper::clear_string($content_line);
+        $content_lines = explode("\n", $content);
 
-				if (!empty($line)) {
-					$lines []= $line;
-				}
-			}
+        if (empty($content_lines)) {
+            return [];
+        }
 
-			$env = [];
+        $lines = [];
 
-			foreach ($lines as $line) {
-				if (!EnvParseHelper::validate_env_entry($line)) {
-					throw new \RuntimeException('Error env file format');
-				}
+        foreach ($content_lines as $content_line) {
+            $line = EnvParseHelper::clearString($content_line);
 
-				$env_var = explode("=", $line, 2);
+            if (!empty($line) && !EnvParseHelper::isCommentEnv($line)) {
+                $lines []= $line;
+            }
+        }
 
-				if (count($env_var) !== 2) {
-					throw new \RuntimeException('Error env file format');
-				}
+        $env = [];
 
-				$env[$env_var[0]] = EnvParseHelper::clear_string($env_var[1]);
-			}
+        foreach ($lines as $line) {
+            $env_var = explode("=", $line, 2);
 
-			return $env;
-		}
-		
-	}
+            if (count($env_var) !== 2) {
+                throw new \RuntimeException('Error env file format');
+            }
+
+            if (!EnvParseHelper::isEnvVar($env_var[0])) {
+                throw new EnvParseException('Invalid format of env option ' . $env_var[0] . "=" . $env_var[1]);
+            }
+
+            if (!EnvParseHelper::isEnvVal($env_var[1])) {
+                throw new EnvParseException('Invalid format of env option' . $env_var[0] . "=" . $env_var[1]);
+            }
+
+            $env[$env_var[0]] = EnvParseHelper::clearString($env_var[1]);
+        }
+
+        return $env;
+    }
+
+}
