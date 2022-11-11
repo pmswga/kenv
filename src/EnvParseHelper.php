@@ -20,7 +20,7 @@ class EnvParseHelper
      */
     public static function isEnvVar(string $env_var) : bool
     {
-        return preg_match("/^[A-Z]+[A-Z\d_]*/", $env_var) > 0;
+        return preg_match("/^[A-Z]+[A-Z\d_]*$/", $env_var) > 0;
     }
 
     /**
