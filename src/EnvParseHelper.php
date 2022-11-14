@@ -20,7 +20,7 @@ class EnvParseHelper
      */
     public static function isEnvVar(string $env_var) : bool
     {
-        return preg_match("/^[A-Z]+[A-Z\d_]*$/", $env_var) > 0;
+        return preg_match("/^[A-Z]+[A-Z\d\W_]*$/", $env_var) > 0;
     }
 
     /**
@@ -47,9 +47,8 @@ class EnvParseHelper
      */
     public static function clearString(string $str) : string
     {
-        $pure_string = ltrim($str);
-        $pure_string = trim($pure_string);
-        $pure_string = rtrim($pure_string);
+        $pure_string = trim($str);
+        $pure_string = preg_replace('/ += +/', '=', $pure_string);
         $pure_string = str_replace('"', '', $pure_string);
         $pure_string = str_replace("'", '', $pure_string);
 
