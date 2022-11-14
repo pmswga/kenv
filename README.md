@@ -5,9 +5,9 @@ Env file & string parser for KPHP.
 Kenv provide two methods:
 
 ```php
-parse_env_file(string $filename)
+parse_env_file(string $filename) : array
 
-parse_env_string(string $env_string)
+parse_env_string(string $env_string) : array
 ```
 
 Both methods return two-dimension associative array. See example.
@@ -29,6 +29,7 @@ $ composer require pmswga/kenv
 
     print_r($env);
 ```
+
 Run with PHP:
 
 ```bash
@@ -87,7 +88,21 @@ Run with KPHP:
 
 ```bash
 # 1. Compile
-$ kphp --composer-root $(pwd) --mode cli example.php
+$ kphp --composer-root $(pwd) --mode cli index.php
 # 2. Execute
 $ ./kphp_out/cli
+```
+
+## Additional
+
+Run tests
+
+```bash
+$ make tests-php
+```
+
+Make docs
+
+```bash
+$ make docs-php
 ```

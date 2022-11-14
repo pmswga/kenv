@@ -2,3 +2,7 @@
 /vendor/
 /kphp_out
 /kphp
+/.phpdoc
+composer.lock
+.env
+.env.example

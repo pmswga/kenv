@@ -6,7 +6,7 @@ class EnvParseHelper
 {
 
     /**
-     * @param string $env
+     * @param string|false|null $env
      * @return bool
      */
     public static function isCommentEnv(string $env) : bool
@@ -15,7 +15,7 @@ class EnvParseHelper
     }
 
     /**
-     * @param string $env_var
+     * @param string|false|null $env_var
      * @return bool
      */
     public static function isEnvVar(string $env_var) : bool
@@ -24,7 +24,7 @@ class EnvParseHelper
     }
 
     /**
-     * @param string $env_eq
+     * @param string|false|null $env_eq
      * @return bool
      */
     public static function isEnvEq(string $env_eq) : bool
@@ -33,7 +33,7 @@ class EnvParseHelper
     }
 
     /**
-     * @param string $env_value
+     * @param string|false|null $env_value
      * @return bool
      */
     public static function isEnvVal(string $env_value) : bool
@@ -42,8 +42,8 @@ class EnvParseHelper
     }
 
     /**
-     * @param string $str
-     * @return string
+     * @param string|false|null $str
+     * @return string|false|null
      */
     public static function clearString(string $str) : string
     {
